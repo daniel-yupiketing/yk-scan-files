@@ -11,7 +11,7 @@
  * Tested up to: 5.4.1
  *
  * Text Domain: yk-scan-files
- * Domain Path: /lang/
+ * Domain Path: /languages/
  */
 
 	defined( 'ABSPATH' );
