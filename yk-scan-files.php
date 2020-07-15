@@ -47,7 +47,7 @@
 			<p>
 			<form method="post" action="">
 				<input type="hidden" name="action" value="scan">
-				<input type="text" name="path" value="'.$_POST["path"].'" placeholder="'.__('Path', 'yk-scan-files').'" required>
+				<input type="text" name="path" value="'.$_POST["path"].'" placeholder="'.__('Path', 'yk-scan-files').'">
 				<input type="text" name="string" value="'.$_POST["string"].'" placeholder="'.__('String', 'yk-scan-files').'" required>
 				<input type="submit" class="button button-primary" value="'.__('Search', 'yk-scan-files').'">
 			</form>
