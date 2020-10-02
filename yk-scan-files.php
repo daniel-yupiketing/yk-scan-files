@@ -45,18 +45,22 @@
 	}
 
 	function yk_scan_files_page(){
+		$path = ( isset( $_POST["path"] ) ) ? $_POST["path"] : '';
+		$string = ( isset( $_POST["string"] ) ) ? $_POST["string"] : '';
+		$file_type = ( isset( $_POST["file_type"] ) ) ? $_POST["file_type"] : '';
+		$action = ( isset( $_POST["action"] ) ) ? $_POST["action"] : '';
 		echo '<div class="wrap">
 			<h1>'.__( "Scan files", "yk-scan-files" ).'</h1>
 			<p>
 			<form method="post" action="">
 				<input type="hidden" name="action" value="scan">
-				<input type="text" name="path" value="'.$_POST["path"].'" placeholder="'.__('Path', 'yk-scan-files').'" required>
-				<input type="text" name="string" value="'.$_POST["string"].'" placeholder="'.__('String', 'yk-scan-files').'" required>
-				<input type="text" name="file_type" value="'.$_POST["file_type"].'" placeholder="'.__('File type', 'yk-scan-files').'">
+				<input type="text" name="path" value="'.$path.'" placeholder="'.__('Path', 'yk-scan-files').'" required>
+				<input type="text" name="string" value="'.$string.'" placeholder="'.__('String', 'yk-scan-files').'" required>
+				<input type="text" name="file_type" value="'.$file_type.'" placeholder="'.__('File type', 'yk-scan-files').'">
 				<input type="submit" class="button button-primary" value="'.__('Search', 'yk-scan-files').'">
 			</form>
 			</p>';
-			if ( $_POST["action"] == 'scan'){
+			if ( $action == 'scan'){
 				$config = array(
 					"initial_path" 	=> '../'.$_POST["path"].'/',
 					"file_type" 		=> strtolower( $_POST["file_type"] ),
