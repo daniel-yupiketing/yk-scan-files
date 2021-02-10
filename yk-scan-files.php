@@ -4,7 +4,7 @@
  * Plugin Name: Scan files
  * Plugin URI: https://yupiketing.com/
  * Description: Search a string in all the files in a given path.
- * Version: 1.0
+ * Version: 1.1
  * Author: Yupiketing
  * Author URI: https://yupiketing.com/
  * Requires at least: 5.0
@@ -15,6 +15,51 @@
  */
 
 	defined( 'ABSPATH' );
+	
+	// Self hosted updates
+	
+	function yk_scan_files_plugin_info( $res, $action, $args ){
+		$plugin_slug = 'yk-scan-files';
+		$remote_url = 'https://admin.yupiketing.com/wp-content/plugins/yk-update-self-host-plugins/updates.php?plugin='.$plugin_slug.'&cache='.strtotime( date( 'Y-m-d H:i:s' ) );
+		$remote = wp_remote_get( $remote_url );
+		$body = json_decode( wp_remote_retrieve_body( $remote ), true );
+		if ( $body && $args->slug == $plugin_slug ){
+			$res = new stdClass();
+			$res->name = $body["name"];
+			$res->slug = $plugin_slug;
+			$res->version = $body["version"];
+			$res->tested = $body["tested"];
+			$res->requires = $body["requires"];
+			$res->requires_php = $body["requires_php"];
+			$res->download_link = $body["download_url"];
+			$res->last_updated = $body["last_updated"];
+			$res->sections = array(
+				'changelog' => $body["sections"]["changelog"],
+			);
+		}
+		return $res;
+	}
+	add_filter('plugins_api', 'yk_scan_files_plugin_info', 20, 3);
+
+	function yk_scan_files_plugin_update( $transient ){
+		$plugins = get_plugins();
+		$plugin_slug = 'yk-scan-files';
+		$remote_url = 'https://admin.yupiketing.com/wp-content/plugins/yk-update-self-host-plugins/updates.php?plugin='.$plugin_slug.'&cache='.strtotime( date( 'Y-m-d H:i:s' ) );
+		$remote = wp_remote_get( $remote_url );
+		$body = json_decode( wp_remote_retrieve_body( $remote ), true );
+		if ( $body && $plugins["$plugin_slug/$plugin_slug.php"]["Version"] != $body["version"] ) {
+			$res = new stdClass();
+			$res->slug = $plugin_slug;
+			$res->plugin = $plugin_slug.'/'.$plugin_slug.'.php';
+			$res->new_version = $body["version"];
+			$res->package = $body["download_url"];
+			$transient->response[$res->plugin] = $res;
+		}
+		return $transient;
+	}
+	add_filter('site_transient_update_plugins', 'yk_scan_files_plugin_update', 10, 1 );
+	
+	// Main code
 
 	function yk_scan_files_function( $search, $path, $config ) {
 		$result = '';
